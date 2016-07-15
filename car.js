@@ -7,27 +7,23 @@ function Car() {
 	var nextLane = positions[0];
 	var carImage = new Image();
 	var isColliding = false;
+	var didPlayHorn = false;
 	
 	var carTypeArray = ["Ambulance.png", "Audi.png", "Black_viper.png", 
 		"Car.png", "Mini_truck.png", "Mini_van.png",
 		"Police.png", "taxi.png", "truck.png"];
 
-	var cor = 0;
+	var colorCount = 0;
 	var self = this;
-
-	this.lowerImpossibleZone = 100;
-	this.upperImpossibleZone = 500;
 
 	this.initialize = function(initialPosition, carType, carIdPar) {
 
-		cor = 0;
+		this.audio = this.getRandomHornSound();
 
-		this.nearMyFront = false;
-		this.nearMyBack = false;
 		this.carNearMyFront;
 		this.carNearMyBack;
 		this.isSliding = false;
-		this.passedInPothole = false;
+		this.passedOnPothole = false;
 
 		this.carSpeed = 0.0;
 		this.carId = carIdPar;
@@ -102,10 +98,9 @@ function Car() {
 
 	this.update = function() {
 		
+		// If there is a car near my back, I must increase my speed
 		if (this.carNearMyBack) {
-			this.increaseSpeed(0.001);
-
-			// this.carNearMyBack.decreaseSpeed(0.005);
+			this.increaseSpeed(0.005);
 			
 			if (CollisionDetection.isNearY(this.collisionArea, this.carNearMyBack.collisionArea, 40)) {
 				this.carSpeed = this.carNearMyBack.carSpeed;
@@ -138,7 +133,7 @@ function Car() {
 	    }
 	    
 	    this.drawNearFrontAlert(context);
-		// this.drawNearBackAlert(context);
+	    this.playHorn()
 
 		if (this.isSliding) {
 			var slideSide = Math.random();
@@ -153,22 +148,33 @@ function Car() {
 
 	}
 
+	this.playHorn = function() {
+		if (this.carNearMyFront) {
+			if (!didPlayHorn) {
+	    		this.audio.play();
+	    		didPlayHorn = true;
+	    	}
+		} else {
+			didPlayHorn = false;
+		}
+	}
+
 	this.drawNearFrontAlert = function(context) {
 		if (this.carNearMyFront) {
 	    	var color1 = "red";
 	    	var color2 = "yellow";
 	    	
-	    	if (cor < 10) {
-	    		cor++;
+	    	if (colorCount < 10) {
+	    		colorCount++;
 	    		color1 = "red";
 	    		color2 = "yellow";
 	    	} else {
 				color2 = "red";
 	    		color1 = "yellow";
-	    		cor = 0;
+	    		colorCount = 0;
 	    	}
-	    	Util.drawTextWithShadow(context, "WATCH OUT!!! " + this.carNearMyFront.carId
-	    		, this.x - 30, this.y - 20, color1, 0, 0, color2);
+	    	Util.drawTextWithShadow(context, "WATCH OUT!!! ", 
+	    		this.x - 30, this.y - 20, color1, 0, 0, color2);
 	    }
 	}
 
@@ -177,14 +183,14 @@ function Car() {
 	    	var color1 = "red";
 	    	var color2 = "yellow";
 	    	
-	    	if (cor < 10) {
-	    		cor++;
+	    	if (colorCount < 10) {
+	    		colorCount++;
 	    		color1 = "red";
 	    		color2 = "yellow";
 	    	} else {
 				color2 = "red";
 	    		color1 = "yellow";
-	    		cor = 0;
+	    		colorCount = 0;
 	    	}
 	    	Util.drawTextWithShadow(context, "BACK " + this.carNearMyBack.carId, 
 	    		this.x - 30, this.y + 120, color1, 0, 0, color2);
@@ -192,7 +198,7 @@ function Car() {
 	}
 
 	this.updatePositionXAccordingLane = function(lane) {
-		this.x = lane * 120 + 170;
+		this.x = lane * GameConfig.scenario.lanesSize + 170;
 		this.collisionArea.x = this.x + 32;
 	}
 
@@ -254,6 +260,13 @@ function Car() {
 
 	this.getCarImage = function() {
 		return carImage;
+	}
+
+	this.getRandomHornSound = function() {
+		var hornNumber = Util.getRandomIntBetweenInterval(1,3);
+		var hornSound = 'sounds/carHorn' + hornNumber + '.mp3';
+
+		return new Audio(hornSound);
 	}
 
 }

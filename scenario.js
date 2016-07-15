@@ -80,16 +80,16 @@ function Scenario() {
 
 	this.createPothole = function(emptyLane) {
 		if (!this.pothole) {
-			this.pothole = new Pothole();	
+			this.pothole = new Obstacle();	
 		}		
-		this.pothole.initialize(emptyLane);
+		this.pothole.initialize(emptyLane, GameConfig.obstacle.pothole);
 	}
 
 	this.createOil = function(emptyLane) {
 		if (!this.oil) {
-			this.oil = new Oil();	
+			this.oil = new Obstacle();	
 		}
-		this.oil.initialize(emptyLane);
+		this.oil.initialize(emptyLane, GameConfig.obstacle.oil);
 	}
 
 	this.hasObstaclesOnRoad = function() {

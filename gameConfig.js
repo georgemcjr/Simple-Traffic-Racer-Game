@@ -14,7 +14,7 @@ GameConfig.debug.showCarId = false;
 GameConfig.debug.showGuideLines = false;
 
 GameConfig.collision.nearDistanceX = 10;
-GameConfig.collision.nearDistanceY = 120;
+GameConfig.collision.nearDistanceY = 100;
 
 GameConfig.scenario.numberOfLanes = 4;
 GameConfig.scenario.lanesSize = 120;
@@ -27,6 +27,8 @@ GameConfig.traffic.numCars = 5;
 GameConfig.level.amountIncrease = 0.05;
 
 GameConfig.obstacle.pointsLossOnPothole = 20;
+GameConfig.obstacle.pothole = 1;
+GameConfig.obstacle.oil = 2;
 
 /* CAR TYPES
 	0 = Ambulance

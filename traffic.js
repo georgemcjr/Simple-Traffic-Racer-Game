@@ -115,7 +115,7 @@ function Traffic() {
 			
 		}
 
-		for (var i = 0; i < GameConfig.traffic.numberOfLanes; i++) {
+		for (var i = 0; i < GameConfig.scenario.numberOfLanes; i++) {
 
 			var carsInCurrentLane = this.carsInLane(i);
 
@@ -155,35 +155,6 @@ function Traffic() {
 		}
 	}
 
-	this.impossibleBypass = function() {
-		var result = true;
-
-		for (var i = 0; i < GameConfig.traffic.numberOfLanes; i++) {
-			result = result && this.hasSomethingInImpossibleZoneForLane(i);
-		}
-
-		return result;
-
-	}
-
-	this.hasSomethingInImpossibleZoneForLane = function(lanePar) {
-		var result = false;
-		var carsInlaneTemp = this.carsInLane(lanePar);
-
-		for (var i = 0; i < carsInlaneTemp.length; i++) {
-			if(carsInlaneTemp[i]) {
-				result = this.isCarInImpossibleRange(carsInlaneTemp[i]) || 
-					this.hasObstaclesInLane(lanePar);
-				if (result) {
-					return result;
-				}
-			}
-		}
-
-		return result;
-
-	}
-
 	this.hasObstaclesInLane = function(lanePar) {
 		if (this.scenario) {
 			return this.scenario.oil && this.scenario.oil.lane == lanePar ||
@@ -199,14 +170,6 @@ function Traffic() {
 		var hasCars = carsInlaneTemp.length > 0;
 
 		return hasObjs || hasCars;
-	}
-
-	this.isCarInImpossibleRange = function(car) {
-		if (car && car.getY() > 100 && car.getY() < 500) {
-			return true;
-		} else {
-			return false;
-		}
 	}
 
 	this.carsInLane = function(lanePar) {
@@ -235,9 +198,6 @@ function Traffic() {
 
 			// Reset near status for each car in lane
 			for (var i = 0; i < carsInCurrentLane.length; i++) {
-				carsInCurrentLane[i].nearMyFront = false;
-				carsInCurrentLane[i].nearMyBack = false;
-
 				carsInCurrentLane[i].carNearMyFront = undefined;
 				carsInCurrentLane[i].carNearMyBack = undefined;
 			}
@@ -254,16 +214,10 @@ function Traffic() {
 						if(carsInCurrentLane[i].y < carsInCurrentLane[j].y) {
 							nearCarsMatrix[i][j] = i;
 							
-							carsInCurrentLane[i].nearMyBack = true;
-							carsInCurrentLane[j].nearMyFront = true;
-
 							carsInCurrentLane[i].carNearMyBack = carsInCurrentLane[j];
 							carsInCurrentLane[j].carNearMyFront = carsInCurrentLane[i];
 						} else {
-							nearCarsMatrix[i][j] = j;
-
-							carsInCurrentLane[j].nearMyBack = true;
-							carsInCurrentLane[i].nearMyFront = true;
+							nearCarsMatrix[i][j] = j;	
 
 							carsInCurrentLane[j].carNearMyBack = carsInCurrentLane[i];
 							carsInCurrentLane[i].carNearMyFront = carsInCurrentLane[j];
@@ -291,7 +245,7 @@ function Traffic() {
 	this.verifyPlayerCollision = function() {
 		
 		carPlayer.setIsColliding(false);
-		carPlayer.nearMyFront = false;
+		carPlayer.carNearMyFront = undefined;
 
 		for (var i = 0; i < cars.length; i++) {
 			
@@ -305,7 +259,7 @@ function Traffic() {
 
 				if(CollisionDetection.isNear(carPlayer.collisionArea, 
 					cars[i].collisionArea)) {
-					carPlayer.nearMyFront = true;
+					carPlayer.carNearMyFront = cars[i];
 				}
 			}
 			
@@ -322,7 +276,7 @@ function Traffic() {
 
 			if (this.scenario.pothole && CollisionDetection.isCollide(carPlayer.collisionArea, 
 				this.scenario.pothole.collisionArea) ) {
-				carPlayer.passedInPothole = true;
+				carPlayer.passedOnPothole = true;
 			}
 		}
 	}

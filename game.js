@@ -117,12 +117,12 @@ Game.update = function() {
   if(gameStarted) {
     player.update();
 
-    if (player.passedInPothole) {
+    if (player.passedOnPothole) {
       lastPoints = lastPoints - GameConfig.obstacle.pointsLossOnPothole;
       if (lastPoints < 0) {
         lastPoints = 0;
       }
-      player.passedInPothole = false;
+      player.passedOnPothole = false;
     }
 
     Game.fps = levelController.increaseSpeed();
