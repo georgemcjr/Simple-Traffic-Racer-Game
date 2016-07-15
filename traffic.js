@@ -118,8 +118,7 @@ function Traffic() {
 		for (var i = 0; i < GameConfig.scenario.numberOfLanes; i++) {
 
 			var carsInCurrentLane = this.carsInLane(i);
-
-			var collidingMatrix = this.verifyColisionInLane(carsInCurrentLane);
+			this.verifyColisionInLane(carsInCurrentLane);
 
 		}
 
@@ -192,8 +191,6 @@ function Traffic() {
 		
 		if (carsInCurrentLane.length > 1) {
 
-			var nearCarsMatrix = this.create2DMatrix(carsInCurrentLane.length);
-
 			var collisionCars = this.createCollisionMap(carsInCurrentLane.length);
 
 			// Reset near status for each car in lane
@@ -202,7 +199,7 @@ function Traffic() {
 				carsInCurrentLane[i].carNearMyBack = undefined;
 			}
 
-			// Test collision only on symmetric matrix
+			// Test collision on symmetric matrix only
 			for (var i = 0; i < carsInCurrentLane.length; i++) {
 				for (var j = i + 1; j < carsInCurrentLane.length; j++) {		
 
@@ -212,13 +209,11 @@ function Traffic() {
 						
 						// store the car that is in the front
 						if(carsInCurrentLane[i].y < carsInCurrentLane[j].y) {
-							nearCarsMatrix[i][j] = i;
 							
 							carsInCurrentLane[i].carNearMyBack = carsInCurrentLane[j];
 							carsInCurrentLane[j].carNearMyFront = carsInCurrentLane[i];
 						} else {
-							nearCarsMatrix[i][j] = j;	
-
+							
 							carsInCurrentLane[j].carNearMyBack = carsInCurrentLane[i];
 							carsInCurrentLane[i].carNearMyFront = carsInCurrentLane[j];
 						}
@@ -237,7 +232,6 @@ function Traffic() {
 
 			this.setWillCollideCars(carsInCurrentLane, collisionCars);
 
-			return nearCarsMatrix;
 		}
 
 	}
@@ -289,22 +283,6 @@ function Traffic() {
 				carsArray[i].setIsColliding(false);
 			}
 		}
-	}
-
-	this.create2DMatrix = function(size) {
-		var matrix = [];
-
-		for (var i = 0; i < size; i++) {
-			matrix[i] = [];
-		}
-
-		for (var i = 0; i < size; i++) {
-			for (var j = 0; j < size; j++) {
-				matrix[i][j] = -1;
-			}
-		}
-
-		return matrix;
 	}
 
 	this.createCollisionMap = function(size) {

@@ -4,9 +4,11 @@ function Scenario() {
 	var roadImageWidth = 500;
 	var roadImageHeight = 600;
 
+	this.trees = [];
+
 	this.initialize = function(canvas) {
 		this.canvas = canvas;
-		this.canvas.style.backgroundColor = 'gray';
+		this.canvas.style.backgroundColor = 'green';
 
 		this.x = (canvas.width / 2) - (roadImageWidth / 2);
 		this.y = 0;
@@ -14,6 +16,8 @@ function Scenario() {
 
 		roadImage.src = "sprites/scenario/road.jpg";
 
+		this.createTrees();
+		
 	}
 
 	this.drawRoad = function(context) {
@@ -26,6 +30,10 @@ function Scenario() {
 
 		if (this.isTherePothole()) {
 			this.pothole.draw(context);	
+		}
+
+		for (var i = 0; i < this.trees.length; i++) {
+			this.trees[i].draw(context);
 		}
 		
 	}
@@ -46,6 +54,8 @@ function Scenario() {
   		} else {
   			this.tryPutAnObstacleOnRoad(emptyLane);
   		}
+
+  		this.updateTrees();
   		
 	}
 
@@ -57,6 +67,12 @@ function Scenario() {
 	  	if (this.isTherePothole()) {
 		  	this.pothole.update(this.canvas.height);	
 	  	}
+	}
+
+	this.updateTrees = function() {
+		for (var i = 0; i < this.trees.length; i++) {
+			this.trees[i].update(this.canvas.height);
+		}
 	}
 
 	this.tryPutAnObstacleOnRoad = function(emptyLane) {
@@ -104,6 +120,20 @@ function Scenario() {
 		return this.pothole && this.pothole.isOnRoad;
 	}
 
+	this.createTrees = function() {
+		var treePositionIndex = 0;
+		var treeSide = 0;
+		for (var i = 0; i < 10; i++) {
+			this.trees[i] = new Tree();
+			this.trees[i].initialize(treePositionIndex, treeSide);
 
+			if (treePositionIndex > 3) {
+				treePositionIndex = 0;
+				treeSide = 1;
+			} else {
+				treePositionIndex++;
+			}			
+		}
+	}
 
 }
