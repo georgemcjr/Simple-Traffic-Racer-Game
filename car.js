@@ -16,9 +16,12 @@ function Car() {
 	var colorCount = 0;
 	var self = this;
 
+	this.slidingSound;
+
 	this.initialize = function(initialPosition, carType, carIdPar) {
 
 		this.audio = this.getRandomHornSound();
+		this.slidingSound = this.getSlidingSound()
 
 		this.carNearMyFront;
 		this.carNearMyBack;
@@ -57,6 +60,7 @@ function Car() {
 	this.moveToLeft = function() {
 	 	if ( !(this.isMovingRight || this.isMovingLeft)) {
 			if (currentLane > positions[0]) {
+				this.slidingSound.play();
 				nextLane = currentLane - 1;
 				this.movingLeft();
 				this.isMovingLeft = true;
@@ -68,6 +72,7 @@ function Car() {
 	this.moveToRight = function() {
 		if ( !(this.isMovingRight || this.isMovingLeft)) {
 			if (currentLane < positions[positions.length - 1]) {
+				this.slidingSound.play();
 				nextLane = currentLane + 1;
 				this.movingRight();
 				this.isMovingLeft = false;
@@ -133,7 +138,7 @@ function Car() {
 	    }
 	    
 	    this.drawNearFrontAlert(context);
-	    this.playHorn()
+	    this.playHorn();
 
 		if (this.isSliding) {
 			var slideSide = Math.random();
@@ -267,6 +272,10 @@ function Car() {
 		var hornSound = 'sounds/carHorn' + hornNumber + '.mp3';
 
 		return new Audio(hornSound);
+	}
+
+	this.getSlidingSound = function() {
+		return new Audio('sounds/sliding.mp3');
 	}
 
 }

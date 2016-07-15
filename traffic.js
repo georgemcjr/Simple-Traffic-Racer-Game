@@ -10,9 +10,13 @@ function Traffic() {
 
 	this.emptyLane;
 	this.nextEmptyLane;
+
+	var crashAudio = new Audio('sounds/crash.mp3');
+	var playedCrash;
 	
 	this.initialize = function(canvas, scenario, carPlayerPar) {
 
+		playedCrash = false;
 		this.canvas = canvas;
 		context = canvas.getContext("2d");
 
@@ -247,7 +251,15 @@ function Traffic() {
 				if(CollisionDetection.isCollide(carPlayer.collisionArea, 
 					cars[i].collisionArea)) {
 					carPlayer.setIsColliding(true);
+				
 					Game.gameOver();
+					
+					if (!playedCrash) {
+						crashAudio.volume = 0.5;
+						crashAudio.play();	
+						playedCrash = true;
+					}
+
 					return;
 				}
 

@@ -18,7 +18,7 @@ function Tree() {
 		image.src = this.getRandomTreeImageSrc();
 		
 		this.x = this.newXPosition();
-		this.y = (-40 -this.height) * (initialPosition);
+		this.y = (-60 -this.height) * (initialPosition);
 		this.isOnScreen = true;
 	}
 
@@ -53,14 +53,6 @@ function Tree() {
 		imageSrcArray[1] = "sprites/scenario/tree2.png";
 
 		var index = Util.getRandomIntBetweenInterval(0,imageSrcArray.length - 1);
-
-		if (index == 0) {
-			this.width = 100;
-			this.height = 100;
-		} else {
-			this.width = 80;
-			this.height = 80;
-		}
 
 		return imageSrcArray[index];
 

@@ -23,7 +23,6 @@ GameConfig.traffic.minCarSpeed = 0.4;
 GameConfig.traffic.maxCarSpeed = 0.9;
 GameConfig.traffic.numCars = 5;
 
-
 GameConfig.level.amountIncrease = 0.05;
 
 GameConfig.obstacle.pointsLossOnPothole = 20;
